@@ -20,29 +20,60 @@ var securityConfig = {
   noSniff: true
 };
 
-server.register(require('inert'), function (err) {
-
+server.register([
+  {
+    register: require('inert')
+  },
+  {
+    register: require('good'),
+    options: {
+      reporters: [{
+        reporter: require('good-console'),
+        events: {
+          response: '*',
+          log: '*'
+        }
+      }]
+    }
+  },
+  {
+    register: require('scooter')
+  },
+  {
+    register: require('blankie'),
+    options: {
+      connectSrc: ['self', '206878104.log.optimizely.com', 'https://api.stripe.com', 'https://pontoon.mozilla.org'],
+      fontSrc: ['self', 'https://fonts.gstatic.com', 'https://maxcdn.bootstrapcdn.com', 'https://pontoon.mozilla.org'],
+      frameSrc: ['https://js.stripe.com', 'https://checkout.stripe.com', 'https://pontoon.mozilla.org'],
+      imgSrc: ['self', 'https://www.google-analytics.com', 'https://q.stripe.com', 'https://pontoon.mozilla.org'],
+      scriptSrc: ['self', 'unsafe-inline', 'unsafe-eval', 'https://cdn.optimizely.com',
+        'https://www.google-analytics.com', 'https://ajax.googleapis.com',
+        'https://js.stripe.com', 'https://checkout.stripe.com', 'https://pontoon.mozilla.org'],
+      styleSrc: ['self', 'unsafe-inline', 'https://fonts.googleapis.com',
+        'https://maxcdn.bootstrapcdn.com', 'https://pontoon.mozilla.org']
+    }
+  }
+], function(err) {
   if (err) {
     throw err;
   }
 
   server.route({
-      method: 'GET',
-      path: '/{param*}',
-      handler: {
-          directory: {
-              path: 'public'
-          }
-      },
-      config: {
-        security: securityConfig,
-        cache: {
-          expiresIn: 1000 * 60 * 5,
-          privacy: 'public'
-        }
+    method: 'GET',
+    path: '/{params*}',
+    handler: {
+      directory: {
+        path: Path.join(__dirname, 'public')
       }
+    },
+    config: {
+      security: securityConfig,
+      cache: {
+        expiresIn: 1000 * 60 * 5,
+        privacy: 'public'
+      }
+    }
   });
-
   server.start(function (err) {
 
     if (err) {
