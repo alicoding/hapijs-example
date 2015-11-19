@@ -29,13 +29,17 @@ server.register(require('inert'), function (err) {
   server.route({
       method: 'GET',
       path: '/{param*}',
-      config: {
-        security: securityConfig
-      },
       handler: {
           directory: {
               path: 'public'
           }
+      },
+      config: {
+        security: securityConfig,
+        cache: {
+          expiresIn: 1000 * 60 * 5,
+          privacy: 'public'
+        }
       }
   });
 
