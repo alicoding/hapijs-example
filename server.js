@@ -8,6 +8,18 @@ server.connection({
   port: process.env.PORT
 });
 
+var securityConfig = {
+  hsts: {
+    maxAge: 15768000,
+    includeSubDomains: true,
+    preload: true
+  },
+  xframe: process.env.ENABLE_XFRAMEOPTIONS === 'true',
+  xss: true,
+  noOpen: true,
+  noSniff: true
+};
+
 server.register(require('inert'), function (err) {
 
   if (err) {
@@ -17,6 +29,9 @@ server.register(require('inert'), function (err) {
   server.route({
       method: 'GET',
       path: '/{param*}',
+      config: {
+        security: securityConfig
+      },
       handler: {
           directory: {
               path: 'public'
