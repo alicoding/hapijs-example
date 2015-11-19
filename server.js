@@ -4,8 +4,8 @@ var Hapi = require('hapi');
 var server = new Hapi.Server();
 
 server.connection({
-  host: 'localhost',
-  port: 8000
+  host: process.env.HOST,
+  port: process.env.PORT
 });
 
 server.register(require('inert'), function (err) {
