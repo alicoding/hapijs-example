@@ -27,4 +27,4 @@ $ npm start
 
 ### Try it out
 
-Visit: http://HOST:PORT or the default http://localhost:8080
+Visit: http://HOST:PORT or the default [http://localhost:8080](http://localhost:8080)
